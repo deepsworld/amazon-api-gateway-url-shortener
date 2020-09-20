@@ -64,8 +64,6 @@ paths:
         responses:
           "200":
             statusCode: "301"
-            responseParameters:
-              method.response.header.Location: {"Fn::Sub": ["'master.${ampDomain}?error=url_not_found'", { "ampDomain": {"Fn::GetAtt":["AmplifyApp", "DefaultDomain"]} }]}
               method.response.header.Cache-Control: "'max-age=300'"
             responseTemplates:
               application/json: "#set($inputRoot = $input.path('$')) \
@@ -107,9 +105,7 @@ paths:
         responses:
           "200":
             statusCode: "200"
-            responseParameters:
               method.response.header.Cache-Control: "'no-cache, no-store'"
-              method.response.header.Access-Control-Allow-Origin: {"Fn::If": ["IsLocal", "'*'", {"Fn::Sub": ["'https://master.${ampDomain}'", { "ampDomain": {"Fn::GetAtt":["AmplifyApp", "DefaultDomain"]} }]}]}
             responseTemplates:
               application/json: "#set($inputRoot = $input.path('$'))[ \
                 #foreach($elem in $inputRoot.Items) { \
@@ -166,8 +162,6 @@ paths:
         responses:
           "200":
             statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: {"Fn::If": ["IsLocal", "'*'", {"Fn::Sub": ["'https://master.${ampDomain}'", { "ampDomain": {"Fn::GetAtt":["AmplifyApp", "DefaultDomain"]} }]}]}
             responseTemplates:
               application/json: "#set($inputRoot = $input.path('$')) \
                 {\"id\":\"$inputRoot.Attributes.id.S\", \
@@ -176,8 +170,6 @@ paths:
                 \"owner\":\"$inputRoot.Attributes.owner.S\"}"
           "400":
             statusCode: "400"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: {"Fn::If": ["IsLocal", "'*'", {"Fn::Sub": ["'https://master.${ampDomain}'", { "ampDomain": {"Fn::GetAtt":["AmplifyApp", "DefaultDomain"]} }]}]}
             responseTemplates:
               application/json: "#set($inputRoot = $input.path('$')) \
                 #if($inputRoot.toString().contains(\"ConditionalCheckFailedException\")) \
@@ -211,7 +203,6 @@ paths:
             responseParameters:
               method.response.header.Access-Control-Allow-Methods: "'POST, GET, OPTIONS'"
               method.response.header.Access-Control-Allow-Headers: "'authorization, content-type'"
-              method.response.header.Access-Control-Allow-Origin: {"Fn::If": ["IsLocal", "'*'", {"Fn::Sub": ["'https://master.${ampDomain}'", { "ampDomain": {"Fn::GetAtt":["AmplifyApp", "DefaultDomain"]} }]}]}
         type: "mock"
 
   /app/{linkId}:
@@ -249,8 +240,6 @@ paths:
         responses:
           "200":
             statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: {"Fn::If": ["IsLocal", "'*'", {"Fn::Sub": ["'https://master.${ampDomain}'", { "ampDomain": {"Fn::GetAtt":["AmplifyApp", "DefaultDomain"]} }]}]}
           "400":
             statusCode: "400"
             responseTemplates:
@@ -302,8 +291,6 @@ paths:
         responses:
           "200":
             statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: {"Fn::If": ["IsLocal", "'*'", {"Fn::Sub": ["'https://master.${ampDomain}'", { "ampDomain": {"Fn::GetAtt":["AmplifyApp", "DefaultDomain"]} }]}]}
             responseTemplates:
               application/json: "#set($inputRoot = $input.path('$')) \
                 {\"id\":\"$inputRoot.Attributes.id.S\", \
@@ -312,8 +299,6 @@ paths:
                 \"owner\":\"$inputRoot.Attributes.owner.S\"}"
           "400":
             statusCode: "400"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: {"Fn::If": ["IsLocal", "'*'", {"Fn::Sub": ["'https://master.${ampDomain}'", { "ampDomain": {"Fn::GetAtt":["AmplifyApp", "DefaultDomain"]} }]}]}
             application/json: "{\"error\": {\"message\":\"Either you do not have permission to do this operation or a parameter is missing\"}}"
         type: "aws"
     options:
@@ -340,7 +325,6 @@ paths:
             responseParameters:
               method.response.header.Access-Control-Allow-Methods: "'PUT, DELETE, OPTIONS'"
               method.response.header.Access-Control-Allow-Headers: "'authorization, content-type'"
-              method.response.header.Access-Control-Allow-Origin: {"Fn::If": ["IsLocal", "'*'", {"Fn::Sub": ["'https://master.${ampDomain}'", { "ampDomain": {"Fn::GetAtt":["AmplifyApp", "DefaultDomain"]} }]}]}
         type: "mock"
 
 ## Validation models
@@ -396,8 +380,3 @@ securityDefinitions:
     type: "apiKey"
     name: "Authorization"
     in: "header"
-    x-amazon-apigateway-authtype: "cognito_user_pools"
-    x-amazon-apigateway-authorizer:
-      providerARNs:
-      - Fn::GetAtt: [ UserPool, Arn ]
-      type: "cognito_user_pools"
