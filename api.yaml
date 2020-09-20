@@ -64,7 +64,6 @@ paths:
         responses:
           "200":
             statusCode: "301"
-              method.response.header.Cache-Control: "'max-age=300'"
             responseTemplates:
               application/json: "#set($inputRoot = $input.path('$')) \
                 #if($inputRoot.toString().contains(\"Item\")) \
@@ -105,7 +104,6 @@ paths:
         responses:
           "200":
             statusCode: "200"
-              method.response.header.Cache-Control: "'no-cache, no-store'"
             responseTemplates:
               application/json: "#set($inputRoot = $input.path('$'))[ \
                 #foreach($elem in $inputRoot.Items) { \
